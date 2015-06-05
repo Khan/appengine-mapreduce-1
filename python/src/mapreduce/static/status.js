@@ -298,6 +298,13 @@ function getElapsedTimeString(start_timestamp_ms, updated_timestamp_ms) {
 // Retrieves the mapreduce_id from the query string.
 function getJobId() {
   var jobId = $.url().param('mapreduce_id');
+  if (jobId == null) {
+    // Maintain backwards compatability with jobs run before this parameter
+    // was renamed. The query string is pulled from datastore under
+    // _StatusRecord.console_url.
+    jobId = $.url().param('job_id');
+  }
+
   return jobId == null ? '' : jobId;
 }
 
