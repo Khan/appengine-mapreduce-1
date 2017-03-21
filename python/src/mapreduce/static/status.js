@@ -97,6 +97,8 @@ function getResponseDataJson(error, data) {
   }
   if (response && response.error_class) {
     error = response.error_class + ': ' + response.error_message;
+  } else if (!data) {
+    error = 'Did not get back JSON data -- are you logged in as an admin?';
   } else if (!response) {
     error = 'Could not parse response JSON data.';
   }

@@ -41,6 +41,7 @@ try:
 except ImportError:
   cloudstorage = None
 
+from google.appengine.api import users
 from google.appengine.ext import webapp
 from mapreduce import errors
 from mapreduce import json_util
@@ -204,6 +205,11 @@ class JsonHandler(webapp.RequestHandler):
 
   def _handle_wrapper(self):
     """The helper method for handling JSON Post and Get requests."""
+    if not users.is_current_user_admin():
+      self.response.set_status(
+          403, message="Must be an admin to access mapreduce")
+      return
+
     if self.request.headers.get("X-Requested-With") != "XMLHttpRequest":
       logging.error("Got JSON request with no X-Requested-With header")
       self.response.set_status(
